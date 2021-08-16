@@ -11,8 +11,7 @@ def showdata(request):
     month = request.GET.get('month')
 
     if item_name != '' and item_name is not None:
-        results = results.filter(d_name__icontains=item_name, direction__icontains='out', created_on__icontains='02')
-    # return render(request, 'blog.html', {'posts': posts})
+        results = results.filter(d_name__icontains=item_name, direction__icontains='out')
 
     if month != '' and month is not None:
         results = results.filter(created_on__icontains='2021-'+month, direction__icontains='out')
