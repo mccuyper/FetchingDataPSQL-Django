@@ -5,6 +5,7 @@ from app.models import FetchIt
 
 def showdata(request):
     results = FetchIt.objects.all()
+    domains = results.distinct('d_name')
     item_name = request.GET.get('item_name')
     month = request.GET.get('month')
 
@@ -14,10 +15,10 @@ def showdata(request):
     if month != '' and month is not None:
         results = results.filter(created_on__icontains='2021-'+month, direction__icontains='out')
 
-    return render(request, 'index.html',{"data":results})
+    return render(request, 'index.html',{"data":results, "dom_names":domains})
 
 
-# -----class based view------
+# # -----class based view------
 # from django.db.models import Q
 # from django.views.generic import ListView
 
@@ -29,8 +30,9 @@ def showdata(request):
 
 #     def get_queryset(self):
 #         item_name = self.request.GET.get('item_name', '')
+#         month = self.request.GET.get('month', '')
 #         object_list = FetchIt.objects.filter(
 #             Q(d_name__icontains=item_name) 
-#             # | Q(content__icontains=item_name)
+#              | Q(created_on__icontains=month)
 #         )
 #         return object_list

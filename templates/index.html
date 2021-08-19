@@ -13,7 +13,7 @@
                   {
                       duration=$(this).html();
                       totalduration+=parseInt(duration);
-                      $('#totduration').text(totalduration/60);
+                      $('#totduration').text(totalduration/60+" min");
                   })
               })
           </script>
@@ -21,33 +21,33 @@
 <body>
     <center>
         <h1>We are successfuly fetch data from existing DB</h1>
-        <div class="col-md-12">
+        <div class="col-md-4">
                 <form class="card card-sm"  method="get">
-                    <div class="card-body row no-gutters align-items-center" >
+                    <div class="card-body row no-gutters" >
                         <div class="col">
-                            <input type="search" name="item_name" placeholder="Domain name" class="form-control form-control-borderless"><br/>
+                            <label>Choose a domain from this list:
+                                <input list="browsers" name="item_name" /></label>
+                                <datalist id="browsers" name="item_name">
+                                    {% for domain in dom_names %}
+                                  <option value="{{ domain }}">{{ domain }}</option>
+                                    {% endfor %}
+                                </datalist> 
+                            <!--input type="search" name="item_name" placeholder="Domain name" class="form-control form-control-borderless"-->
+                            <br/>
                             <input type="search" name="month" placeholder="Month" class="form-control form-control-borderless">
                         </div>
                         </div>
                         <div class="col-auto">
                             <button class="btn btn-success btn-search" type="submit">search</button>
                         </div>
+                        <!-- <div class="col-auto">
+                            <button class="btn btn-success btn-search" type="submit">SHOW ALL DOMAINS</button>
+                        </div> -->
                     </div>
                 </form>
             </div>
-            
-
         <hr>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                {% for c in data %}
-              <a class="dropdown-item" href="#">{{ c.d_name }}</a>
-              {% endfor %}
-            </div>
-          </div>
+        
         <table border="1" width="80%">
             <tr>
                 <th>ID</th>
@@ -57,23 +57,19 @@
                 <th>Duration</th>
             </tr>
             {% for result in data %}
-                 
                 <tr>
                     <td>{{result.user_id}}</td>
                     <td>{{result.d_name}}</td>
-
                     <td>{{result.direction}}</td>
                     <td>{{result.created_on}}</td>
                     <td>{{result.duration}}</td>
                 </tr>
-                
             {% endfor %}
-            <tr>
-                <td colspan="4">TOTAL:</td>
-                <td id="totduration" style="font-weight: bold;"></td>
+            <tr style="font-weight: bold;">
+                <td colspan="4" style="text-align: end;">TOTAL:</td>
+                <td id="totduration" ></td>
             </tr>
         </table>
-        
     </center>
    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
