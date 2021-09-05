@@ -26,14 +26,15 @@ def showdata(request):
         'total': total,
     }
 
-
     return render(request, 'index.html',context )
 
 def generate_csv(request):
-    # url = 'http://127.0.0.1:8000/?item_name=domain1.gcpbx.cloud&month=03'
-    url = request.build_absolute_uri
+  
+    url = request.META.get('HTTP_REFERER')
+ 
+  
     html = urllib.request.urlopen(url).read()
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, 'html.parser')
     table = soup.select_one("table")
     headers = [th.text for th in table.select("tr th")]
     
@@ -46,6 +47,7 @@ def generate_csv(request):
         response = HttpResponse(f, content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=result.csv'    
         writer = csv.writer(response)
+        
         return response
 
 
