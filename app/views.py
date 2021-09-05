@@ -1,6 +1,11 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 from app.models import FetchIt
 from django.db.models import Sum
+from bs4 import BeautifulSoup
+import urllib.request
+import csv
+import requests
 
 
 def showdata(request):
@@ -14,9 +19,7 @@ def showdata(request):
         results = results.filter(d_name__icontains=item_name, direction__icontains='out', created_on__icontains='2021-'+month)
         total = results.aggregate(Sum('duration'))['duration__sum']
         total = total/60
-    # if month != '' and month is not None:
-    #     results = results.filter(created_on__icontains='2021-'+month, direction__icontains='out')
-
+   
     context = {
         "data":results,
         "dom_names":domains,
@@ -26,22 +29,24 @@ def showdata(request):
 
     return render(request, 'index.html',context )
 
+def generate_csv(request):
+    # url = 'http://127.0.0.1:8000/?item_name=domain1.gcpbx.cloud&month=03'
+    url = request.build_absolute_uri
+    html = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(html)
+    table = soup.select_one("table")
+    headers = [th.text for th in table.select("tr th")]
+    
+    with open("result.csv", "w", newline="") as f:
+        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+        wr.writerow(headers)
+        wr.writerows([[td.text for td in row.find_all("td")] for row in table.select("tr + tr")])
 
-# # -----class based view------
-# from django.db.models import Q
-# from django.views.generic import ListView
+    with open("result.csv") as f:
+        response = HttpResponse(f, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=result.csv'    
+        writer = csv.writer(response)
+        return response
 
-# class DBView(ListView):
-#     model = FetchIt
-#     template_name = 'index.html'
-#     context_objects_name = 'data'
-#     paginate_by = 100
 
-#     def get_queryset(self):
-#         item_name = self.request.GET.get('item_name', '')
-#         month = self.request.GET.get('month', '')
-#         object_list = FetchIt.objects.filter(
-#             Q(d_name__icontains=item_name) 
-#              | Q(created_on__icontains=month)
-#         )
-#         return object_list
+

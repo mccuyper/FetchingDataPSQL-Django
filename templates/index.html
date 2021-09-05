@@ -7,13 +7,16 @@
 </head>
 <body>
     <center>
-        <h1>We are successfuly fetch data from existing DB</h1>
+        <h1>build_absolute_uri: {{ request.build_absolute_uri }}</h1>
+        <h1>get_absolute_url: {{ request.get_absolute_url }}</h1>
+        
+        <h1>get_full_path: {{ request.get_full_path }}</h1><h1>We are successfuly fetch data from existing DB</h1>
         <div class="col-md-4">
                 <form class="card card-sm"  method="get">
                     <div class="card-body row no-gutters" >
                         <div class="col">
                             <label>Choose a domain from this list:
-                                <input list="browsers" name="item_name" /></label>
+                                <input list="browsers" name="item_name" required></label>
                                 <datalist id="browsers" name="item_name">
                                     {% for domain in dom_names %}
                                   <option value="{{ domain }}">{{ domain }}</option>
@@ -21,7 +24,7 @@
                                 </datalist> 
                             <!--input type="search" name="item_name" placeholder="Domain name" class="form-control form-control-borderless"-->
                             <br/>
-                            <input type="search" name="month" placeholder="Month" class="form-control form-control-borderless">
+                            <input type="search" name="month" placeholder="Month" class="form-control form-control-borderless" required>
                         </div>
                         </div>
                         <div class="col-auto">
@@ -58,8 +61,9 @@
                 <!-- <td id="totduration" ></td> -->
             </tr>
         </table>
-        
-        <button onclick="location.href='{% url 'script' %}'" class="btn btn-success mt-2">DOWNLOAD CSV</button></a>
+        <a href="{% url 'generate-csv' %}" class="btn btn-success mt-2">DOWNLOAD CSV
+        </a>
+   <p>{{ get_absolute_url }}</p>
     </center>
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
