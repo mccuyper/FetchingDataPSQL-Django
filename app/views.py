@@ -29,10 +29,7 @@ def showdata(request):
     return render(request, 'index.html',context )
 
 def generate_csv(request):
-  
     url = request.META.get('HTTP_REFERER')
- 
-  
     html = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(html, 'html.parser')
     table = soup.select_one("table")
@@ -52,3 +49,5 @@ def generate_csv(request):
 
 
 
+def showByDomains(request):
+    return HttpResponse("<h1>REDIRECTED</h1>")
